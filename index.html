@@ -10,301 +10,338 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
   <title>Hidratación</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       height: 100%; width: 100%;
       background: #F5F0E8;
-      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
       overflow: hidden;
     }
-
     .app {
       width: 100%; height: 100%;
-      background: #F5F0E8;
       display: flex; flex-direction: column;
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
     }
 
     /* HERO */
-    .hero { padding: 20px 24px 22px; flex-shrink: 0; }
-    .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-    .app-name { font-size: 32px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
+    .hero { padding: 20px 22px 18px; flex-shrink: 0; }
+
+    .app-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+    .app-name { font-size: 30px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; line-height: 1.1; }
     .app-streak { font-size: 16px; color: #888; margin-top: 4px; }
 
     .litros-badge {
       display: flex; align-items: center; gap: 8px;
-      background: #5BA8F5; border-radius: 24px; padding: 10px 18px 10px 12px;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      background: #5BA8F5; border-radius: 50px;
+      padding: 10px 16px 10px 12px;
+      flex-shrink: 0; margin-top: 2px;
+      -webkit-tap-highlight-color: transparent; cursor: pointer;
     }
-    .litros-badge svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
-    .litros-badge-val { font-family: 'DM Mono', monospace; font-size: 17px; font-weight: 500; color: #fff; }
+    .litros-badge svg { width: 18px; height: 18px; fill: #fff; }
+    .litros-badge span { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: #fff; }
 
-    .pies-row { display: flex; gap: 16px; }
-    .pie-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; flex: 1; }
-    .pie-svg { width: 100%; aspect-ratio: 1; max-width: 180px; }
-    .pie-label { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+    /* PIES */
+    .pies-row { display: flex; gap: 12px; align-items: flex-start; }
+    .pie-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
+    .pie-wrap svg { width: 100%; height: auto; display: block; }
+    .pie-label { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
 
-    /* HOUR CHIPS */
-    .hours-row { display: flex; gap: 6px; justify-content: center; }
-    .hour-chip {
-      min-width: 36px; height: 36px; border-radius: 18px;
-      padding: 0 6px;
+    /* HOURS */
+    .hours-row { display: flex; gap: 5px; justify-content: center; flex-wrap: nowrap; }
+    .hchip {
+      width: 34px; height: 34px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500;
-      color: #888; background: transparent;
+      font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500;
+      color: #888; background: transparent; border: none; outline: none;
       cursor: pointer; -webkit-tap-highlight-color: transparent;
-      transition: transform 0.15s; flex-shrink: 0;
-      border: none; outline: none;
+      flex-shrink: 0;
     }
-    .hour-chip.done { background: #1a1a1a; color: #F5F0E8; }
-    .hour-chip.future { opacity: 0.3; cursor: default; }
-    .hour-chip:not(.future):active { transform: scale(0.88); }
+    .hchip.done { background: #1a1a1a; color: #F5F0E8; }
+    .hchip.future { opacity: 0.28; pointer-events: none; }
+    .hchip:not(.future):active { opacity: 0.6; }
 
     /* BOTTOM */
     .bottom {
       background: #1a1a1a;
-      border-radius: 32px 32px 0 0;
+      border-radius: 28px 28px 0 0;
       flex: 1; display: flex; flex-direction: column;
-      padding: 18px 20px 0; min-height: 0;
+      padding: 16px 18px 0; overflow: hidden;
     }
 
-    .bottom-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-shrink: 0; }
-    .cal-month { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; font-weight: 500; }
-    .cal-btns { display: flex; gap: 4px; }
-    .cal-btns button {
-      background: none; border: none; color: #666; cursor: pointer;
-      font-size: 22px; padding: 4px 10px; border-radius: 8px;
-      -webkit-tap-highlight-color: transparent;
-      min-width: 44px; min-height: 44px;
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .cal-month-label { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; font-weight: 500; }
+    .cal-nav { display: flex; gap: 0; }
+    .cal-nav button {
+      background: none; border: none; color: #666;
+      font-size: 24px; line-height: 1;
+      width: 44px; height: 44px;
       display: flex; align-items: center; justify-content: center;
-    }
-    .cal-btns button:active { color: #ccc; }
-
-    .cal-day-labels { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 8px; flex-shrink: 0; }
-    .cal-dl { font-family: 'DM Mono', monospace; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.45); text-align: center; }
-
-    .cal-grid-wrap { flex-shrink: 0; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px 6px; }
-
-    .cal-cell-wrap {
-      display: flex; align-items: center; justify-content: center;
-      aspect-ratio: 1; cursor: pointer;
+      border-radius: 8px; cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    .cal-dot { width: 26px; height: 26px; border-radius: 50%; background: #2a2a2a; transition: transform 0.12s; flex-shrink: 0; }
-    .cal-cell-wrap:active .cal-dot { transform: scale(0.85); }
-    .cal-cell-wrap.done .cal-dot     { background: #fff; }
-    .cal-cell-wrap.selected .cal-dot { background: #fff; }
-    .cal-cell-wrap.today .cal-dot    { background: #444; outline: 2px solid #888; outline-offset: 2px; }
-    .cal-cell-wrap.other-month       { pointer-events: none; opacity: 0; }
+    .cal-nav button:active { color: #fff; }
 
-    .home-bar { display: flex; justify-content: center; padding: 12px 0 10px; flex-shrink: 0; margin-top: auto; }
-    .home-line { width: 130px; height: 5px; background: #fff; border-radius: 99px; opacity: 0.07; }
+    .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 8px; }
+    .cal-day { font-family: 'DM Mono', monospace; font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; text-transform: uppercase; }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px 4px; }
+    .cal-cell {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+    }
+    .cal-dot { width: 24px; height: 24px; border-radius: 50%; background: #2a2a2a; }
+    .cal-cell.done   .cal-dot { background: #fff; }
+    .cal-cell.sel    .cal-dot { background: #fff; }
+    .cal-cell.today  .cal-dot { background: #3a3a3a; box-shadow: 0 0 0 2px #666; }
+    .cal-cell.empty  { pointer-events: none; opacity: 0; }
+    .cal-cell:active .cal-dot { opacity: 0.7; }
+
+    .home-indicator { display: flex; justify-content: center; padding: 10px 0 8px; margin-top: auto; }
+    .home-indicator span { width: 120px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 99px; display: block; }
 
     .toast {
-      position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%) translateY(80px);
-      background: #1a1a1a; color: #fff;
+      position: fixed; bottom: 40px; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: #222; color: #fff;
       font-family: 'DM Mono', monospace; font-size: 14px;
-      padding: 12px 24px; border-radius: 24px;
-      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-      white-space: nowrap; z-index: 100;
+      padding: 12px 22px; border-radius: 22px;
+      transition: transform 0.3s ease; z-index: 999;
+      pointer-events: none; white-space: nowrap;
     }
-    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.visible { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 <div class="app">
+
   <div class="hero">
     <div class="app-header">
       <div>
         <div class="app-name">Hidratación</div>
-        <div class="app-streak" id="streak-label">1 día activo</div>
+        <div class="app-streak" id="streak-txt">1 día activo</div>
       </div>
       <div class="litros-badge" id="badge-btn">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C12 2 4 9.5 4 14.5C4 18.64 7.58 22 12 22C16.42 22 20 18.64 20 14.5C20 9.5 12 2 12 2Z"/></svg>
-        <span class="litros-badge-val" id="status-litros">0.0 L</span>
+        <svg viewBox="0 0 24 24"><path d="M12 2C12 2 4 9.5 4 14.5C4 18.64 7.58 22 12 22C16.42 22 20 18.64 20 14.5C20 9.5 12 2 12 2Z"/></svg>
+        <span id="litros-txt">0.0 L</span>
       </div>
     </div>
 
     <div class="pies-row">
       <div class="pie-wrap">
-        <svg class="pie-svg" viewBox="0 0 152 152" id="pie-morning"></svg>
+        <svg id="pie-m" viewBox="0 0 160 160"></svg>
         <div class="pie-label">Mañana</div>
-        <div class="hours-row" id="hours-morning"></div>
+        <div class="hours-row" id="hrs-m"></div>
       </div>
       <div class="pie-wrap">
-        <svg class="pie-svg" viewBox="0 0 152 152" id="pie-afternoon"></svg>
+        <svg id="pie-t" viewBox="0 0 160 160"></svg>
         <div class="pie-label">Tarde</div>
-        <div class="hours-row" id="hours-afternoon"></div>
+        <div class="hours-row" id="hrs-t"></div>
       </div>
     </div>
   </div>
 
   <div class="bottom">
-    <div class="bottom-header">
-      <div class="cal-month" id="cal-month"></div>
-      <div class="cal-btns">
-        <button id="prev-btn" aria-label="Mes anterior">&#8249;</button>
-        <button id="next-btn" aria-label="Mes siguiente">&#8250;</button>
+    <div class="cal-header">
+      <div class="cal-month-label" id="cal-lbl"></div>
+      <div class="cal-nav">
+        <button id="prev-btn">&#8249;</button>
+        <button id="next-btn">&#8250;</button>
       </div>
     </div>
-    <div class="cal-day-labels" id="cal-day-labels"></div>
-    <div class="cal-grid-wrap" id="cal-grid-wrap">
-      <div class="cal-grid" id="cal-grid"></div>
-    </div>
-    <div class="home-bar"><div class="home-line"></div></div>
+    <div class="cal-days" id="cal-days"></div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="home-indicator"><span></span></div>
   </div>
-</div>
 
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-const DAYS=['L','M','X','J','V','S','D'];
-const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const MORNING=['08:00','09:00','10:00','11:00','12:00'];
-const AFTERNOON=['14:00','15:00','16:00','17:00','18:00'];
-const ALL_TIMES=[...MORNING,...AFTERNOON];
-const ML=100, PIE_FILL='#1a1a1a', PIE_BG='#DDD8CE', CENTER='#F5F0E8';
+const DAYS = ['L','M','X','J','V','S','D'];
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MOR = ['08:00','09:00','10:00','11:00','12:00'];
+const AFT = ['14:00','15:00','16:00','17:00','18:00'];
+const ALL = [...MOR,...AFT];
+const ML = 100;
+const FILL = '#1a1a1a', BG = '#DDD8CE', CENTER = '#F5F0E8';
 
-let viewDate=new Date(), selectedDate=new Date(), doneSlots={};
-try{doneSlots=JSON.parse(localStorage.getItem('hidratacion_v1')||'{}');}catch(e){}
+let vDate = new Date(), selDate = new Date(), data = {};
+try { data = JSON.parse(localStorage.getItem('hid_v2') || '{}'); } catch(e) {}
 
-const y0=new Date().getFullYear(),m0=new Date().getMonth();
-const k1=new Date(y0,m0,1).toISOString().slice(0,10);
-const k2=new Date(y0,m0,2).toISOString().slice(0,10);
-if(!doneSlots[k1]) doneSlots[k1]=['08:00','09:00','10:00','11:00','12:00','14:00','15:00'];
-if(!doneSlots[k2]) doneSlots[k2]=['08:00','09:00','10:00','11:00','12:00','14:00'];
-const todayKey=new Date().toISOString().slice(0,10);
-if(!doneSlots[todayKey]||!doneSlots[todayKey].length) doneSlots[todayKey]=['08:00','09:00','10:00'];
+// seed ejemplo
+const y0=new Date().getFullYear(), m0=new Date().getMonth();
+const dk1=fmt(new Date(y0,m0,1)), dk2=fmt(new Date(y0,m0,2)), dkt=fmt(new Date());
+if (!data[dk1]) data[dk1] = ['08:00','09:00','10:00','11:00','12:00','14:00','15:00'];
+if (!data[dk2]) data[dk2] = ['08:00','09:00','10:00','11:00','12:00','14:00'];
+if (!data[dkt] || !data[dkt].length) data[dkt] = ['08:00','09:00','10:00'];
 
-function save(){try{localStorage.setItem('hidratacion_v1',JSON.stringify(doneSlots));}catch(e){}}
-function dateKey(d){return d.toISOString().slice(0,10);}
-function calcStreak(){let s=0,d=new Date();d.setHours(0,0,0,0);for(let i=0;i<365;i++){const dk=d.toISOString().slice(0,10);if(doneSlots[dk]?.length){s++;d.setDate(d.getDate()-1);}else break;}return Math.max(s,1);}
-function calcLitros(){let t=0;Object.values(doneSlots).forEach(a=>{t+=a.length*ML;});return(t/1000).toFixed(1);}
+function fmt(d) { return d.toISOString().slice(0,10); }
+function save() { try { localStorage.setItem('hid_v2', JSON.stringify(data)); } catch(e){} }
 
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+function streak() {
+  let s=0, d=new Date(); d.setHours(0,0,0,0);
+  for (let i=0;i<365;i++) {
+    if ((data[fmt(d)]||[]).length) { s++; d.setDate(d.getDate()-1); } else break;
+  }
+  return Math.max(s,1);
 }
 
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-
-async function requestNotifications(){
-  if(!('Notification' in window)){showToast('Notificaciones no disponibles');return;}
-  const perm=await Notification.requestPermission();
-  if(perm==='granted'){showToast('Notificaciones activadas');scheduleNotifications();}
-  else showToast('Actívalas en Ajustes → Safari');
+function litros() {
+  let t=0; Object.values(data).forEach(a=>{ t+=a.length*ML; }); return (t/1000).toFixed(1);
 }
 
-function scheduleNotifications(){
-  if(Notification.permission!=='granted') return;
-  const now=new Date(), nowH=now.getHours(), nowM=now.getMinutes();
-  ALL_TIMES.forEach(t=>{
-    const h=parseInt(t), msUntil=((h-nowH)*60-nowM)*60*1000;
-    if(msUntil>0){
-      setTimeout(()=>{
-        const dk=dateKey(new Date()), done=doneSlots[dk]||[];
-        if(!done.includes(t)) new Notification('Hidratación 💧',{body:'Son las '+t+'. ¿Has bebido agua?',icon:'icon-192.png',tag:'h-'+t,renotify:true});
-      },msUntil);
-    }
+function toast(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('visible');
+  setTimeout(()=>el.classList.remove('visible'),2500);
+}
+
+// Service Worker
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+async function enableNotifs() {
+  if (!('Notification' in window)) { toast('No disponible en este navegador'); return; }
+  const p = await Notification.requestPermission();
+  if (p === 'granted') { toast('Notificaciones activadas ✓'); scheduleNotifs(); }
+  else toast('Actívalas: Ajustes → Safari → Notificaciones');
+}
+
+function scheduleNotifs() {
+  if (Notification.permission !== 'granted') return;
+  const now = new Date(), h0=now.getHours(), m0=now.getMinutes();
+  ALL.forEach(t => {
+    const h = parseInt(t);
+    const ms = ((h - h0) * 60 - m0) * 60000;
+    if (ms > 0) setTimeout(() => {
+      const dk = fmt(new Date()), done = data[dk]||[];
+      if (!done.includes(t)) new Notification('Hidratación 💧', {
+        body: 'Son las ' + t + '. ¿Has bebido agua?',
+        icon: 'icon-192.png', tag: 'h'+t, renotify: true
+      });
+    }, ms);
   });
 }
 
-document.getElementById('badge-btn').addEventListener('click',requestNotifications);
-if(Notification.permission==='granted') scheduleNotifications();
+document.getElementById('badge-btn').addEventListener('click', enableNotifs);
+if (Notification.permission === 'granted') scheduleNotifs();
 
-function drawPie(id,done,total,times,dk){
-  const svg=document.getElementById(id);svg.innerHTML='';
-  const cx=76,cy=76,r=68,sa=(2*Math.PI)/total;
-  for(let i=0;i<total;i++){
-    const sA=-Math.PI/2+i*sa,eA=-Math.PI/2+(i+1)*sa;
-    const x1=cx+r*Math.cos(sA),y1=cy+r*Math.sin(sA),x2=cx+r*Math.cos(eA),y2=cy+r*Math.sin(eA);
-    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
-    p.setAttribute('d',`M${cx} ${cy} L${x1.toFixed(2)} ${y1.toFixed(2)} A${r} ${r} 0 ${(eA-sA)>Math.PI?1:0} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}Z`);
-    p.setAttribute('fill',i<done?PIE_FILL:PIE_BG);
-    p.style.cursor='pointer';
-    p.addEventListener('click',()=>toggle(dk,times[i]));
+// PIE
+function pie(id, done, total, times, dk) {
+  const svg = document.getElementById(id);
+  if (!svg) return;
+  svg.innerHTML = '';
+  const cx=80, cy=80, r=72, slice=(2*Math.PI)/total;
+  for (let i=0; i<total; i++) {
+    const a0=-Math.PI/2+i*slice, a1=-Math.PI/2+(i+1)*slice;
+    const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0);
+    const x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',`M${cx},${cy} L${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 0,1 ${x1.toFixed(1)},${y1.toFixed(1)} Z`);
+    p.setAttribute('fill', i < done ? FILL : BG);
+    p.setAttribute('style','cursor:pointer');
+    p.addEventListener('click', () => toggle(dk, times[i]));
     svg.appendChild(p);
   }
-  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',34);c.setAttribute('fill',CENTER);svg.appendChild(c);
-  const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
-  txt.setAttribute('x',cx);txt.setAttribute('y',cy+10);txt.setAttribute('text-anchor','middle');
-  txt.setAttribute('font-family','DM Sans, sans-serif');txt.setAttribute('font-size','30');txt.setAttribute('font-weight','700');txt.setAttribute('fill','#1a1a1a');txt.textContent=done;
-  svg.appendChild(txt);
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',36);
+  c.setAttribute('fill',CENTER); svg.appendChild(c);
+  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x',cx); t.setAttribute('y',cy+12);
+  t.setAttribute('text-anchor','middle');
+  t.setAttribute('font-family','DM Sans, sans-serif');
+  t.setAttribute('font-size','34'); t.setAttribute('font-weight','700');
+  t.setAttribute('fill','#1a1a1a'); t.textContent = done;
+  svg.appendChild(t);
 }
 
-function renderHours(cid,times,done,dk){
-  const wrap=document.getElementById(cid);wrap.innerHTML='';
-  const nowH=new Date().getHours();
-  const isToday=selectedDate.toDateString()===new Date().toDateString();
-  times.forEach(t=>{
-    const h=parseInt(t),isDone=done.includes(t),isFuture=isToday&&h>nowH&&!isDone;
-    const chip=document.createElement('button');
-    chip.className='hour-chip'+(isDone?' done':isFuture?' future':'');
-    chip.textContent=h+'h';
-    if(!isFuture) chip.addEventListener('click',()=>toggle(dk,t));
-    wrap.appendChild(chip);
+// HOURS
+function hours(id, times, done, dk) {
+  const wrap = document.getElementById(id);
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const nowH = new Date().getHours();
+  const isToday = selDate.toDateString() === new Date().toDateString();
+  times.forEach(t => {
+    const h = parseInt(t), isDone = done.includes(t);
+    const isFut = isToday && h > nowH && !isDone;
+    const btn = document.createElement('button');
+    btn.className = 'hchip' + (isDone?' done':isFut?' future':'');
+    btn.textContent = h+'h';
+    if (!isFut) btn.addEventListener('click', () => toggle(dk, t));
+    wrap.appendChild(btn);
   });
 }
 
-function renderPies(){
-  const dk=dateKey(selectedDate),done=doneSlots[dk]||[];
-  const mD=MORNING.filter(t=>done.includes(t)).length,aD=AFTERNOON.filter(t=>done.includes(t)).length;
-  drawPie('pie-morning',mD,5,MORNING,dk);
-  drawPie('pie-afternoon',aD,5,AFTERNOON,dk);
-  renderHours('hours-morning',MORNING,done,dk);
-  renderHours('hours-afternoon',AFTERNOON,done,dk);
-  document.getElementById('status-litros').textContent=calcLitros()+' L';
-  const s=calcStreak();
-  document.getElementById('streak-label').textContent=s+(s===1?' día activo':' días activos');
+function render() {
+  const dk = fmt(selDate), done = data[dk]||[];
+  const mD = MOR.filter(t=>done.includes(t)).length;
+  const aD = AFT.filter(t=>done.includes(t)).length;
+  pie('pie-m', mD, 5, MOR, dk);
+  pie('pie-t', aD, 5, AFT, dk);
+  hours('hrs-m', MOR, done, dk);
+  hours('hrs-t', AFT, done, dk);
+  document.getElementById('litros-txt').textContent = litros()+' L';
+  const s = streak();
+  document.getElementById('streak-txt').textContent = s+(s===1?' día activo':' días activos');
 }
 
-function toggle(dk,t){
-  if(!doneSlots[dk])doneSlots[dk]=[];
-  const i=doneSlots[dk].indexOf(t);
-  if(i>=0) doneSlots[dk].splice(i,1); else doneSlots[dk].push(t);
-  save();renderPies();renderCalendar();
+function toggle(dk, t) {
+  if (!data[dk]) data[dk] = [];
+  const i = data[dk].indexOf(t);
+  if (i>=0) data[dk].splice(i,1); else data[dk].push(t);
+  save(); render(); calendar();
 }
 
-function renderCalendar(){
-  const dlW=document.getElementById('cal-day-labels');dlW.innerHTML='';
-  DAYS.forEach(d=>{const el=document.createElement('div');el.className='cal-dl';el.textContent=d;dlW.appendChild(el);});
-  const grid=document.getElementById('cal-grid');grid.innerHTML='';
-  const y=viewDate.getFullYear(),m=viewDate.getMonth();
-  document.getElementById('cal-month').textContent=MONTHS[m].toUpperCase()+' '+y;
-  const today=new Date();today.setHours(0,0,0,0);
-  let dow=new Date(y,m,1).getDay();dow=dow===0?6:dow-1;
+// CALENDAR
+function calendar() {
+  const daysEl = document.getElementById('cal-days');
+  const gridEl = document.getElementById('cal-grid');
+  if (!daysEl || !gridEl) return;
+  daysEl.innerHTML = '';
+  gridEl.innerHTML = '';
+  DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className='cal-day'; el.textContent=d; daysEl.appendChild(el);
+  });
+  const y=vDate.getFullYear(), m=vDate.getMonth();
+  document.getElementById('cal-lbl').textContent = MONTHS[m].toUpperCase()+' '+y;
+  const today=new Date(); today.setHours(0,0,0,0);
+  let dow=new Date(y,m,1).getDay(); dow=dow===0?6:dow-1;
   const dim=new Date(y,m+1,0).getDate();
-  const mk=(cls)=>{const w=document.createElement('div');w.className='cal-cell-wrap '+cls;const d=document.createElement('div');d.className='cal-dot';w.appendChild(d);return w;};
-  for(let i=0;i<35;i++){
-    const dayNum=i-dow+1;
-    if(dayNum<1||dayNum>dim){grid.appendChild(mk('other-month'));continue;}
-    const d=new Date(y,m,dayNum);d.setHours(0,0,0,0);
-    const dk=dateKey(d),n=(doneSlots[dk]||[]).length;
-    const isToday=d.getTime()===today.getTime(),isPast=d<today,isSel=d.toDateString()===selectedDate.toDateString();
-    let cls='';
-    if(isSel) cls='selected';
-    else if(isToday) cls='today';
-    else if(isPast&&n>0) cls='done';
-    const w=mk(cls);
-    w.addEventListener('click',()=>{selectedDate=new Date(d);renderCalendar();renderPies();});
-    grid.appendChild(w);
+
+  for (let i=0; i<35; i++) {
+    const dayN = i-dow+1;
+    const cell = document.createElement('div');
+    const dot = document.createElement('div');
+    dot.className='cal-dot'; cell.appendChild(dot);
+    if (dayN<1||dayN>dim) {
+      cell.className='cal-cell empty';
+    } else {
+      const d=new Date(y,m,dayN); d.setHours(0,0,0,0);
+      const dk=fmt(d), n=(data[dk]||[]).length;
+      const isToday=d.getTime()===today.getTime();
+      const isPast=d<today;
+      const isSel=d.toDateString()===selDate.toDateString();
+      cell.className='cal-cell'+(isSel?' sel':isToday?' today':isPast&&n>0?' done':'');
+      cell.addEventListener('click',()=>{ selDate=new Date(d); calendar(); render(); });
+    }
+    gridEl.appendChild(cell);
   }
-  document.getElementById('cal-grid-wrap').style.height=document.getElementById('cal-grid').scrollHeight+'px';
 }
 
-document.getElementById('prev-btn').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()-1,1);renderCalendar();});
-document.getElementById('next-btn').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);renderCalendar();});
+document.getElementById('prev-btn').addEventListener('click',()=>{ vDate=new Date(vDate.getFullYear(),vDate.getMonth()-1,1); calendar(); });
+document.getElementById('next-btn').addEventListener('click',()=>{ vDate=new Date(vDate.getFullYear(),vDate.getMonth()+1,1); calendar(); });
 
-renderCalendar();renderPies();setInterval(renderPies,60000);
+// INIT — esperar a que el DOM esté completamente listo
+document.addEventListener('DOMContentLoaded', () => {
+  render();
+  calendar();
+  setInterval(render, 60000);
+});
 </script>
 </body>
 </html>
