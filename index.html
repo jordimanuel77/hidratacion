@@ -10,13 +10,12 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
   <title>Hidratación</title>
-  
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       height: 100%; width: 100%;
       background: #F5F0E8;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
       overflow: hidden;
     }
@@ -29,115 +28,91 @@
 
     /* HERO */
     .hero { padding: 20px 22px 18px; flex-shrink: 0; }
-
     .app-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
-    .app-name { font-size: 30px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; line-height: 1.1; }
+    .app-name { font-size: 30px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
     .app-streak { font-size: 16px; color: #888; margin-top: 4px; }
-
-    .litros-badge {
+    .badge {
       display: flex; align-items: center; gap: 8px;
       background: #5BA8F5; border-radius: 50px;
-      padding: 10px 16px 10px 12px;
-      flex-shrink: 0; margin-top: 2px;
-      -webkit-tap-highlight-color: transparent; cursor: pointer;
+      padding: 10px 16px 10px 12px; flex-shrink: 0;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
     }
-    .litros-badge svg { width: 18px; height: 18px; fill: #fff; }
-    .litros-badge span { font-family: 'SF Mono', ui-monospace, monospace; font-size: 16px; font-weight: 500; color: #fff; }
+    .badge svg { width: 18px; height: 18px; fill: #fff; flex-shrink: 0; }
+    .badge span { font-size: 16px; font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; }
 
-    /* PIES */
-    .pies-row { display: flex; gap: 12px; align-items: flex-start; }
+    .pies-row { display: flex; gap: 12px; }
     .pie-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
-    .pie-wrap svg { width: 100%; height: auto; display: block; }
-    .pie-label { font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
-
-    /* HOURS */
-    .hours-row { display: flex; gap: 5px; justify-content: center; flex-wrap: nowrap; }
+    .pie-wrap canvas { width: 100% !important; height: auto !important; display: block; }
+    .pie-label { font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
+    .hours-row { display: flex; gap: 4px; justify-content: center; }
     .hchip {
       width: 34px; height: 34px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'SF Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500;
-      color: #888; background: transparent; border: none; outline: none;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
-      flex-shrink: 0;
+      font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums;
+      color: #999; background: transparent; border: none; outline: none;
+      cursor: pointer; -webkit-tap-highlight-color: transparent; flex-shrink: 0;
     }
     .hchip.done { background: #1a1a1a; color: #F5F0E8; }
-    .hchip.future { opacity: 0.28; pointer-events: none; }
-    .hchip:not(.future):active { opacity: 0.6; }
+    .hchip.future { opacity: 0.25; pointer-events: none; }
 
     /* BOTTOM */
     .bottom {
-      background: #1a1a1a;
-      border-radius: 28px 28px 0 0;
+      background: #1a1a1a; border-radius: 28px 28px 0 0;
       flex: 1; display: flex; flex-direction: column;
       padding: 16px 18px 0; overflow: hidden;
     }
-
     .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .cal-month-label { font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; font-weight: 500; }
-    .cal-nav { display: flex; gap: 0; }
+    .cal-month-lbl { font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; font-weight: 600; }
+    .cal-nav { display: flex; }
     .cal-nav button {
-      background: none; border: none; color: #666;
-      font-size: 24px; line-height: 1;
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 8px; cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
+      background: none; border: none; color: #666; font-size: 26px;
+      width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: 8px;
     }
     .cal-nav button:active { color: #fff; }
-
     .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 8px; }
-    .cal-day { font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; text-transform: uppercase; }
-
+    .cal-day { font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; text-transform: uppercase; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px 4px; }
-    .cal-cell {
-      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
-    }
-    .cal-dot { width: 24px; height: 24px; border-radius: 50%; background: #2a2a2a; }
-    .cal-cell.done   .cal-dot { background: #fff; }
-    .cal-cell.sel    .cal-dot { background: #fff; }
-    .cal-cell.today  .cal-dot { background: #3a3a3a; box-shadow: 0 0 0 2px #666; }
-    .cal-cell.empty  { pointer-events: none; opacity: 0; }
-    .cal-cell:active .cal-dot { opacity: 0.7; }
-
-    .home-indicator { display: flex; justify-content: center; padding: 10px 0 8px; margin-top: auto; }
-    .home-indicator span { width: 120px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 99px; display: block; }
-
+    .cal-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .dot { width: 24px; height: 24px; border-radius: 50%; background: #2a2a2a; }
+    .cal-cell.done .dot  { background: #fff; }
+    .cal-cell.sel  .dot  { background: #fff; }
+    .cal-cell.today .dot { background: #3a3a3a; box-shadow: 0 0 0 2px #666; }
+    .cal-cell.empty { pointer-events: none; opacity: 0; }
+    .home-bar { display: flex; justify-content: center; padding: 12px 0 8px; margin-top: auto; }
+    .home-bar span { width: 120px; height: 4px; background: rgba(255,255,255,0.07); border-radius: 99px; display: block; }
     .toast {
       position: fixed; bottom: 40px; left: 50%;
       transform: translateX(-50%) translateY(60px);
-      background: #222; color: #fff;
-      font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px;
+      background: #222; color: #fff; font-size: 14px;
       padding: 12px 22px; border-radius: 22px;
       transition: transform 0.3s ease; z-index: 999;
       pointer-events: none; white-space: nowrap;
     }
-    .toast.visible { transform: translateX(-50%) translateY(0); }
+    .toast.on { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 <div class="app">
-
   <div class="hero">
     <div class="app-header">
       <div>
         <div class="app-name">Hidratación</div>
         <div class="app-streak" id="streak-txt">1 día activo</div>
       </div>
-      <div class="litros-badge" id="badge-btn">
+      <div class="badge" id="badge-btn">
         <svg viewBox="0 0 24 24"><path d="M12 2C12 2 4 9.5 4 14.5C4 18.64 7.58 22 12 22C16.42 22 20 18.64 20 14.5C20 9.5 12 2 12 2Z"/></svg>
         <span id="litros-txt">0.0 L</span>
       </div>
     </div>
-
     <div class="pies-row">
       <div class="pie-wrap">
-        <svg id="pie-m" viewBox="0 0 160 160"></svg>
+        <canvas id="pie-m" width="160" height="160"></canvas>
         <div class="pie-label">Mañana</div>
         <div class="hours-row" id="hrs-m"></div>
       </div>
       <div class="pie-wrap">
-        <svg id="pie-t" viewBox="0 0 160 160"></svg>
+        <canvas id="pie-t" width="160" height="160"></canvas>
         <div class="pie-label">Tarde</div>
         <div class="hours-row" id="hrs-t"></div>
       </div>
@@ -146,7 +121,7 @@
 
   <div class="bottom">
     <div class="cal-header">
-      <div class="cal-month-label" id="cal-lbl"></div>
+      <div class="cal-month-lbl" id="cal-lbl"></div>
       <div class="cal-nav">
         <button id="prev-btn">&#8249;</button>
         <button id="next-btn">&#8250;</button>
@@ -154,194 +129,168 @@
     </div>
     <div class="cal-days" id="cal-days"></div>
     <div class="cal-grid" id="cal-grid"></div>
-    <div class="home-indicator"><span></span></div>
+    <div class="home-bar"><span></span></div>
   </div>
-
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const DAYS = ['L','M','X','J','V','S','D'];
-const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const MOR = ['08:00','09:00','10:00','11:00','12:00'];
-const AFT = ['14:00','15:00','16:00','17:00','18:00'];
-const ALL = [...MOR,...AFT];
-const ML = 100;
-const FILL = '#1a1a1a', BG = '#DDD8CE', CENTER = '#F5F0E8';
+const DAYS=['L','M','X','J','V','S','D'];
+const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MOR=['08:00','09:00','10:00','11:00','12:00'];
+const AFT=['14:00','15:00','16:00','17:00','18:00'];
+const ALL=[...MOR,...AFT];
+const ML=100;
+const FILL='#1a1a1a', BG='#DDD8CE', CEN='#F5F0E8';
 
-let vDate = new Date(), selDate = new Date(), data = {};
-try { data = JSON.parse(localStorage.getItem('hid_v2') || '{}'); } catch(e) {}
+let vDate=new Date(), selDate=new Date(), data={};
+try{data=JSON.parse(localStorage.getItem('hid_v3')||'{}');}catch(e){}
 
-// seed ejemplo
-const y0=new Date().getFullYear(), m0=new Date().getMonth();
-const dk1=fmt(new Date(y0,m0,1)), dk2=fmt(new Date(y0,m0,2)), dkt=fmt(new Date());
-if (!data[dk1]) data[dk1] = ['08:00','09:00','10:00','11:00','12:00','14:00','15:00'];
-if (!data[dk2]) data[dk2] = ['08:00','09:00','10:00','11:00','12:00','14:00'];
-if (!data[dkt] || !data[dkt].length) data[dkt] = ['08:00','09:00','10:00'];
+const y0=new Date().getFullYear(),m0=new Date().getMonth();
+const dk1=fmt(new Date(y0,m0,1)),dk2=fmt(new Date(y0,m0,2)),dkt=fmt(new Date());
+if(!data[dk1])data[dk1]=['08:00','09:00','10:00','11:00','12:00','14:00','15:00'];
+if(!data[dk2])data[dk2]=['08:00','09:00','10:00','11:00','12:00','14:00'];
+if(!data[dkt]||!data[dkt].length)data[dkt]=['08:00','09:00','10:00'];
 
-function fmt(d) { return d.toISOString().slice(0,10); }
-function save() { try { localStorage.setItem('hid_v2', JSON.stringify(data)); } catch(e){} }
+function fmt(d){return d.toISOString().slice(0,10);}
+function save(){try{localStorage.setItem('hid_v3',JSON.stringify(data));}catch(e){}}
+function streak(){let s=0,d=new Date();d.setHours(0,0,0,0);for(let i=0;i<365;i++){if((data[fmt(d)]||[]).length){s++;d.setDate(d.getDate()-1);}else break;}return Math.max(s,1);}
+function litros(){let t=0;Object.values(data).forEach(a=>{t+=a.length*ML;});return(t/1000).toFixed(1);}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2500);}
 
-function streak() {
-  let s=0, d=new Date(); d.setHours(0,0,0,0);
-  for (let i=0;i<365;i++) {
-    if ((data[fmt(d)]||[]).length) { s++; d.setDate(d.getDate()-1); } else break;
-  }
-  return Math.max(s,1);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+async function enableNotifs(){
+  if(!('Notification' in window)){toast('No disponible');return;}
+  const p=await Notification.requestPermission();
+  if(p==='granted'){toast('Notificaciones activadas ✓');scheduleNotifs();}
+  else toast('Ajustes → Safari → Notificaciones');
 }
-
-function litros() {
-  let t=0; Object.values(data).forEach(a=>{ t+=a.length*ML; }); return (t/1000).toFixed(1);
-}
-
-function toast(msg) {
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('visible');
-  setTimeout(()=>el.classList.remove('visible'),2500);
-}
-
-// Service Worker
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-
-async function enableNotifs() {
-  if (!('Notification' in window)) { toast('No disponible en este navegador'); return; }
-  const p = await Notification.requestPermission();
-  if (p === 'granted') { toast('Notificaciones activadas ✓'); scheduleNotifs(); }
-  else toast('Actívalas: Ajustes → Safari → Notificaciones');
-}
-
-function scheduleNotifs() {
-  if (Notification.permission !== 'granted') return;
-  const now = new Date(), h0=now.getHours(), m0=now.getMinutes();
-  ALL.forEach(t => {
-    const h = parseInt(t);
-    const ms = ((h - h0) * 60 - m0) * 60000;
-    if (ms > 0) setTimeout(() => {
-      const dk = fmt(new Date()), done = data[dk]||[];
-      if (!done.includes(t)) new Notification('Hidratación 💧', {
-        body: 'Son las ' + t + '. ¿Has bebido agua?',
-        icon: 'icon-192.png', tag: 'h'+t, renotify: true
-      });
-    }, ms);
+function scheduleNotifs(){
+  if(Notification.permission!=='granted')return;
+  const now=new Date(),h0=now.getHours(),m0=now.getMinutes();
+  ALL.forEach(t=>{
+    const h=parseInt(t),ms=((h-h0)*60-m0)*60000;
+    if(ms>0)setTimeout(()=>{
+      const dk=fmt(new Date()),done=data[dk]||[];
+      if(!done.includes(t))new Notification('Hidratación 💧',{body:'Son las '+t+'. ¿Has bebido agua?',icon:'icon-192.png',tag:'h'+t,renotify:true});
+    },ms);
   });
 }
+document.getElementById('badge-btn').addEventListener('click',enableNotifs);
+if(Notification.permission==='granted')scheduleNotifs();
 
-document.getElementById('badge-btn').addEventListener('click', enableNotifs);
-if (Notification.permission === 'granted') scheduleNotifs();
-
-// PIE
-function pie(id, done, total, times, dk) {
-  const svg = document.getElementById(id);
-  if (!svg) return;
-  svg.innerHTML = '';
-  const cx=80, cy=80, r=72, slice=(2*Math.PI)/total;
-  for (let i=0; i<total; i++) {
-    const a0=-Math.PI/2+i*slice, a1=-Math.PI/2+(i+1)*slice;
-    const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0);
-    const x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
-    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-    p.setAttribute('d',`M${cx},${cy} L${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 0,1 ${x1.toFixed(1)},${y1.toFixed(1)} Z`);
-    p.setAttribute('fill', i < done ? FILL : BG);
-    p.setAttribute('style','cursor:pointer');
-    p.addEventListener('click', () => toggle(dk, times[i]));
-    svg.appendChild(p);
+// PIE con Canvas — funciona en todos los navegadores iOS
+function drawPie(id, done, total, times, dk){
+  const canvas=document.getElementById(id);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const cx=W/2, cy=H/2, r=W*0.45, ri=W*0.225;
+  ctx.clearRect(0,0,W,H);
+  const slice=(2*Math.PI)/total;
+  for(let i=0;i<total;i++){
+    const a0=-Math.PI/2+i*slice, a1=a0+slice;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,a0,a1);
+    ctx.closePath();
+    ctx.fillStyle=i<done?FILL:BG;
+    ctx.fill();
   }
-  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',36);
-  c.setAttribute('fill',CENTER); svg.appendChild(c);
-  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-  t.setAttribute('x',cx); t.setAttribute('y',cy+12);
-  t.setAttribute('text-anchor','middle');
-  t.setAttribute('font-family','DM Sans, sans-serif');
-  t.setAttribute('font-size','34'); t.setAttribute('font-weight','700');
-  t.setAttribute('fill','#1a1a1a'); t.textContent = done;
-  svg.appendChild(t);
+  // centro
+  ctx.beginPath();
+  ctx.arc(cx,cy,ri,0,2*Math.PI);
+  ctx.fillStyle=CEN;
+  ctx.fill();
+  // número
+  ctx.fillStyle='#1a1a1a';
+  ctx.font='bold '+(W*0.22)+'px -apple-system, sans-serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(done,cx,cy);
+
+  // tap zones
+  canvas.onclick=function(e){
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=W/rect.width, scaleY=H/rect.height;
+    const x=(e.clientX-rect.left)*scaleX-cx;
+    const y=(e.clientY-rect.top)*scaleY-cy;
+    const dist=Math.sqrt(x*x+y*y);
+    if(dist<ri||dist>r)return;
+    let angle=Math.atan2(y,x)+Math.PI/2;
+    if(angle<0)angle+=2*Math.PI;
+    const idx=Math.floor(angle/(2*Math.PI)*total);
+    if(idx>=0&&idx<times.length)toggle(dk,times[idx]);
+  };
 }
 
-// HOURS
-function hours(id, times, done, dk) {
-  const wrap = document.getElementById(id);
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  const nowH = new Date().getHours();
-  const isToday = selDate.toDateString() === new Date().toDateString();
-  times.forEach(t => {
-    const h = parseInt(t), isDone = done.includes(t);
-    const isFut = isToday && h > nowH && !isDone;
-    const btn = document.createElement('button');
-    btn.className = 'hchip' + (isDone?' done':isFut?' future':'');
-    btn.textContent = h+'h';
-    if (!isFut) btn.addEventListener('click', () => toggle(dk, t));
+function renderHours(id,times,done,dk){
+  const wrap=document.getElementById(id);if(!wrap)return;
+  wrap.innerHTML='';
+  const nowH=new Date().getHours();
+  const isToday=selDate.toDateString()===new Date().toDateString();
+  times.forEach(t=>{
+    const h=parseInt(t),isDone=done.includes(t),isFut=isToday&&h>nowH&&!isDone;
+    const btn=document.createElement('button');
+    btn.className='hchip'+(isDone?' done':isFut?' future':'');
+    btn.textContent=h+'h';
+    if(!isFut)btn.addEventListener('click',()=>toggle(dk,t));
     wrap.appendChild(btn);
   });
 }
 
-function render() {
-  const dk = fmt(selDate), done = data[dk]||[];
-  const mD = MOR.filter(t=>done.includes(t)).length;
-  const aD = AFT.filter(t=>done.includes(t)).length;
-  pie('pie-m', mD, 5, MOR, dk);
-  pie('pie-t', aD, 5, AFT, dk);
-  hours('hrs-m', MOR, done, dk);
-  hours('hrs-t', AFT, done, dk);
-  document.getElementById('litros-txt').textContent = litros()+' L';
-  const s = streak();
-  document.getElementById('streak-txt').textContent = s+(s===1?' día activo':' días activos');
+function render(){
+  const dk=fmt(selDate),done=data[dk]||[];
+  const mD=MOR.filter(t=>done.includes(t)).length;
+  const aD=AFT.filter(t=>done.includes(t)).length;
+  drawPie('pie-m',mD,5,MOR,dk);
+  drawPie('pie-t',aD,5,AFT,dk);
+  renderHours('hrs-m',MOR,done,dk);
+  renderHours('hrs-t',AFT,done,dk);
+  document.getElementById('litros-txt').textContent=litros()+' L';
+  const s=streak();
+  document.getElementById('streak-txt').textContent=s+(s===1?' día activo':' días activos');
 }
 
-function toggle(dk, t) {
-  if (!data[dk]) data[dk] = [];
-  const i = data[dk].indexOf(t);
-  if (i>=0) data[dk].splice(i,1); else data[dk].push(t);
-  save(); render(); calendar();
+function toggle(dk,t){
+  if(!data[dk])data[dk]=[];
+  const i=data[dk].indexOf(t);
+  if(i>=0)data[dk].splice(i,1);else data[dk].push(t);
+  save();render();calendar();
 }
 
-// CALENDAR
-function calendar() {
-  const daysEl = document.getElementById('cal-days');
-  const gridEl = document.getElementById('cal-grid');
-  if (!daysEl || !gridEl) return;
-  daysEl.innerHTML = '';
-  gridEl.innerHTML = '';
-  DAYS.forEach(d => {
-    const el = document.createElement('div');
-    el.className='cal-day'; el.textContent=d; daysEl.appendChild(el);
-  });
-  const y=vDate.getFullYear(), m=vDate.getMonth();
-  document.getElementById('cal-lbl').textContent = MONTHS[m].toUpperCase()+' '+y;
-  const today=new Date(); today.setHours(0,0,0,0);
-  let dow=new Date(y,m,1).getDay(); dow=dow===0?6:dow-1;
+function calendar(){
+  const daysEl=document.getElementById('cal-days');
+  const gridEl=document.getElementById('cal-grid');
+  if(!daysEl||!gridEl)return;
+  daysEl.innerHTML='';gridEl.innerHTML='';
+  DAYS.forEach(d=>{const el=document.createElement('div');el.className='cal-day';el.textContent=d;daysEl.appendChild(el);});
+  const y=vDate.getFullYear(),m=vDate.getMonth();
+  document.getElementById('cal-lbl').textContent=MONTHS[m].toUpperCase()+' '+y;
+  const today=new Date();today.setHours(0,0,0,0);
+  let dow=new Date(y,m,1).getDay();dow=dow===0?6:dow-1;
   const dim=new Date(y,m+1,0).getDate();
-
-  for (let i=0; i<35; i++) {
-    const dayN = i-dow+1;
-    const cell = document.createElement('div');
-    const dot = document.createElement('div');
-    dot.className='cal-dot'; cell.appendChild(dot);
-    if (dayN<1||dayN>dim) {
-      cell.className='cal-cell empty';
-    } else {
-      const d=new Date(y,m,dayN); d.setHours(0,0,0,0);
-      const dk=fmt(d), n=(data[dk]||[]).length;
-      const isToday=d.getTime()===today.getTime();
-      const isPast=d<today;
-      const isSel=d.toDateString()===selDate.toDateString();
+  for(let i=0;i<35;i++){
+    const dayN=i-dow+1;
+    const cell=document.createElement('div');
+    const dot=document.createElement('div');dot.className='dot';cell.appendChild(dot);
+    if(dayN<1||dayN>dim){cell.className='cal-cell empty';}
+    else{
+      const d=new Date(y,m,dayN);d.setHours(0,0,0,0);
+      const dk=fmt(d),n=(data[dk]||[]).length;
+      const isToday=d.getTime()===today.getTime(),isPast=d<today,isSel=d.toDateString()===selDate.toDateString();
       cell.className='cal-cell'+(isSel?' sel':isToday?' today':isPast&&n>0?' done':'');
-      cell.addEventListener('click',()=>{ selDate=new Date(d); calendar(); render(); });
+      cell.addEventListener('click',()=>{selDate=new Date(d);calendar();render();});
     }
     gridEl.appendChild(cell);
   }
 }
 
-document.getElementById('prev-btn').addEventListener('click',()=>{ vDate=new Date(vDate.getFullYear(),vDate.getMonth()-1,1); calendar(); });
-document.getElementById('next-btn').addEventListener('click',()=>{ vDate=new Date(vDate.getFullYear(),vDate.getMonth()+1,1); calendar(); });
+document.getElementById('prev-btn').addEventListener('click',()=>{vDate=new Date(vDate.getFullYear(),vDate.getMonth()-1,1);calendar();});
+document.getElementById('next-btn').addEventListener('click',()=>{vDate=new Date(vDate.getFullYear(),vDate.getMonth()+1,1);calendar();});
 
-// INIT — esperar a que el DOM esté completamente listo
-document.addEventListener('DOMContentLoaded', () => {
-  render();
-  calendar();
-  setInterval(render, 60000);
-});
+window.addEventListener('load',()=>{render();calendar();setInterval(render,60000);});
 </script>
 </body>
 </html>
