@@ -10,13 +10,13 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
   <title>Hidratación</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       height: 100%; width: 100%;
       background: #F5F0E8;
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
       -webkit-font-smoothing: antialiased;
       overflow: hidden;
     }
@@ -42,20 +42,20 @@
       -webkit-tap-highlight-color: transparent; cursor: pointer;
     }
     .litros-badge svg { width: 18px; height: 18px; fill: #fff; }
-    .litros-badge span { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: #fff; }
+    .litros-badge span { font-family: 'SF Mono', ui-monospace, monospace; font-size: 16px; font-weight: 500; color: #fff; }
 
     /* PIES */
     .pies-row { display: flex; gap: 12px; align-items: flex-start; }
     .pie-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
     .pie-wrap svg { width: 100%; height: auto; display: block; }
-    .pie-label { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
+    .pie-label { font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
 
     /* HOURS */
     .hours-row { display: flex; gap: 5px; justify-content: center; flex-wrap: nowrap; }
     .hchip {
       width: 34px; height: 34px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500;
+      font-family: 'SF Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500;
       color: #888; background: transparent; border: none; outline: none;
       cursor: pointer; -webkit-tap-highlight-color: transparent;
       flex-shrink: 0;
@@ -73,7 +73,7 @@
     }
 
     .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .cal-month-label { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; font-weight: 500; }
+    .cal-month-label { font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; font-weight: 500; }
     .cal-nav { display: flex; gap: 0; }
     .cal-nav button {
       background: none; border: none; color: #666;
@@ -86,7 +86,7 @@
     .cal-nav button:active { color: #fff; }
 
     .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 8px; }
-    .cal-day { font-family: 'DM Mono', monospace; font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; text-transform: uppercase; }
+    .cal-day { font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; text-transform: uppercase; }
 
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px 4px; }
     .cal-cell {
@@ -107,7 +107,7 @@
       position: fixed; bottom: 40px; left: 50%;
       transform: translateX(-50%) translateY(60px);
       background: #222; color: #fff;
-      font-family: 'DM Mono', monospace; font-size: 14px;
+      font-family: 'SF Mono', ui-monospace, monospace; font-size: 14px;
       padding: 12px 22px; border-radius: 22px;
       transition: transform 0.3s ease; z-index: 999;
       pointer-events: none; white-space: nowrap;
